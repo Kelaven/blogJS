@@ -1,1 +1,1 @@
-console.log('in form');
+import "../assets/scripts/topbar.js";

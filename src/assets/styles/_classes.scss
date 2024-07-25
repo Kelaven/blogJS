@@ -1,0 +1,30 @@
+@use "media-queries" as *;
+
+.container {
+  width: 100%;
+
+  @include sm {
+    width: 100%;
+    background-color: lightblue;
+  }
+
+  @include md {
+    width: 90%;
+    background-color: lightgreen;
+  }
+
+  @include lg {
+    width: 80%;
+    background-color: lightcoral;
+  }
+
+  @include xl {
+    width: 70%;
+    background-color: lightgoldenrodyellow;
+  }
+
+  @include xxl {
+    width: 60%;
+    background-color: lightpink;
+  }
+}
