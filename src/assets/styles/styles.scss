@@ -4,3 +4,66 @@
 @use "reset";
 @use "utils";
 @use "variables";
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  min-height: 100vh;
+  display: grid;
+  grid:
+    // lignes :
+
+    "header" auto
+    "content" 1fr
+    "footer" auto /
+    // colonnes :
+    auto; // une seule colonne dont la taille est automatique
+}
+
+header {
+  grid-area: header;
+  background: var(--dark);
+  padding: 20px;
+  display: flex;
+  flex-flow: row nowrap; // nowrap pour pas que ça aille à la ligne
+  justify-content: space-between;
+  align-items: center;
+  a {
+    color: white;
+  }
+  .header-brand {
+    font-size: 4rem;
+    font-weight: 700;
+  }
+  ul {
+    display: flex;
+    li {
+      .header-nav {
+        font-size: 1.8rem;
+        padding: 0 10px;
+      }
+      .active {
+        font-weight: 700;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.content {
+  grid-area: content;
+  //   background: red;
+  padding: 20px;
+}
+
+footer {
+  color: white;
+  text-align: center;
+  font-size: 1.8rem;
+  grid-area: footer;
+  padding: 20px;
+  background: var(--dark-grey);
+}

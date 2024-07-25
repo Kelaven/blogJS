@@ -5,26 +5,26 @@
 
   @include sm {
     width: 100%;
-    background-color: lightblue;
+    // background-color: lightblue;
   }
 
   @include md {
     width: 90%;
-    background-color: lightgreen;
+    // background-color: lightgreen;
   }
 
   @include lg {
     width: 80%;
-    background-color: lightcoral;
+    // background-color: lightcoral;
   }
 
   @include xl {
     width: 70%;
-    background-color: lightgoldenrodyellow;
+    // background-color: lightgoldenrodyellow;
   }
 
   @include xxl {
     width: 60%;
-    background-color: lightpink;
+    // background-color: lightpink;
   }
 }
