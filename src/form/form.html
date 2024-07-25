@@ -9,7 +9,41 @@
 
 <body>
     <div class="container">
-        <a href="../index.html">Accueil</a>
+        <header>
+            <a class="header-brand" href="./index.html">Blog</a>
+            <ul>
+                <li>
+                    <a class="header-nav" href="./index.html">Accueil</a>
+                </li>
+                <li>
+                    <a class="header-nav active" href="./form/form.html">Créer un article</a>
+                </li>
+            </ul>
+        </header>
+        <div class="content">
+            <form>
+                <h2 class="title-underline">
+                    Ajouter un article
+                </h2>
+                <div class="form-group">
+                    <label>Auteur</label>
+                    <input type="text" name="author">
+                </div>
+                <div class="form-group">
+                    <label>Catégorie</label>
+                    <input type="text" name="category">
+                </div>
+                <div class="form-group">
+                    <label>Article</label>
+                    <textarea name="content"></textarea>
+                </div>
+                <div class="form-btn-container">
+                    <button class="btn btn-secondary">Annuler</button>
+                    <button class="btn btn-primary">Sauvegarder</button>
+                </div>
+            </form>
+        </div>
+        <footer>© Blog</footer>
     </div>
     <script type="module" src="./form.js"></script>
     <script type="module" src="../index.js"></script>
