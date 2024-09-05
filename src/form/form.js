@@ -6,7 +6,7 @@ const form = document.querySelector("form");
 const errorElement = document.getElementById("errors");
 let errors = [];
 
-form.addEventListener("submit", event => {
+form.addEventListener("submit", async event => {
     event.preventDefault();
 
     // formdata pour récupérer tous les input et textarea plutôt que que tout sélectionner à la main : 
@@ -23,11 +23,25 @@ form.addEventListener("submit", event => {
     // Vérifier si notre contenu n'a pas d'erreur avant de l'envoyer au serveur : 
     if (formIsValid(objt)) {
 
-        // Maintenant que l'on a notre objet qui contient nos data, on peut facilement le transformer en JSON : 
-        const json = JSON.stringify(objt); // stringify pour convertir un objet JS en json, parse pour l'inverse
-        console.log(json);
+        try {
+            // Maintenant que l'on a notre objet qui contient nos data, on peut facilement le transformer en JSON : 
+            const json = JSON.stringify(objt); // stringify pour convertir un objet JS en json, parse pour l'inverse
 
-        // Maintenant on est prêt à envoyer notre donnée au serveur. 
+            // Maintenant on est prêt à envoyer notre donnée au serveur:
+            const response = await fetch('https://restapi.fr/api/objets', {
+                method: "POST",
+                body: json, // les données
+                headers: { // format sur lequel on va envoyer l'information
+                    'Content-Type': "application/json"
+                }
+            });
+            const body = await response.json()
+            console.log(body);
+        } catch (error) {
+            console.error('e : ', e);
+        }
+
+
     }
 
 
