@@ -14,21 +14,21 @@ form.addEventListener("submit", async event => {
     const entries = formData.entries(); // retourne un iterateur permettant d'accéder aux paires clefs/valeurs contenues dans cet objet
 
 
-    const objt = Array.from(entries).reduce((acc, value) => {
+    const article = Array.from(entries).reduce((acc, value) => {
         acc[value[0]] = value[1];
         return acc;
     }, {}); // Array.from permet de créer une nouvelle instance d'Array (une copie superficielle) à partir d'un objet itérable. On va utiliser reduce pour transformer le tableau obtenu en objet Javascript (et ainsi pouvoir partager les données). Voir plus en bas. 
-    // ? NB : on peut optimiser et obtenir exactement le même résultat avec const objt = Object.fromEntries(entries);
+    // ? NB : on peut optimiser et obtenir exactement le même résultat avec const article = Object.fromEntries(entries);
 
     // Vérifier si notre contenu n'a pas d'erreur avant de l'envoyer au serveur : 
-    if (formIsValid(objt)) {
+    if (formIsValid(article)) {
 
         try {
             // Maintenant que l'on a notre objet qui contient nos data, on peut facilement le transformer en JSON : 
-            const json = JSON.stringify(objt); // stringify pour convertir un objet JS en json, parse pour l'inverse
+            const json = JSON.stringify(article); // stringify pour convertir un objet JS en json, parse pour l'inverse
 
             // Maintenant on est prêt à envoyer notre donnée au serveur:
-            const response = await fetch('https://restapi.fr/api/objets', {
+            const response = await fetch('https://restapi.fr/api/articles', {
                 method: "POST",
                 body: json, // les données
                 headers: { // format sur lequel on va envoyer l'information
@@ -51,11 +51,11 @@ form.addEventListener("submit", async event => {
 })
 
 
-const formIsValid = (objt) => {
+const formIsValid = (article) => {
     // Réinitialiser le tableau d'erreurs avant chaque validation
     errors = [];
 
-    if (!objt.author || !objt.category || !objt.content) { // si jamais un des champs n'est pas défini, on rempli le tableau d'erreurs
+    if (!article.author || !article.category || !article.content || !article.img || !article.title) { // si jamais un des champs n'est pas défini, on rempli le tableau d'erreurs
         errors.push('Vous devez renseigner tous les champs.');
     }
 
