@@ -12,7 +12,11 @@ const createArticles = (articles) => {
         articleDOM.innerHTML = `
 <img src="${article.img}" alt="profile-img">
 <h2>${article.title}</h2>
-<p class="article-author">${article.author} - ${article.category}</p>
+<p class="article-author">${article.author} - ${(new Date(article.createdAt)).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        })}</p>
 <p class="article-content">${article.content}</p>
 <div class="article-actions">
   <button class="btn btn-danger" data-id=${article._id}>Supprimer</button>

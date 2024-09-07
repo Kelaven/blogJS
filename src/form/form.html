@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <header>
-            <a class="header-brand" href="./index.html">Blog</a>
+            <a class="header-brand" href="/index.html">Blog</a>
             <ul>
                 <li>
                     <a class="header-nav" href="./index.html">Accueil</a>
@@ -47,8 +47,9 @@
                 </div>
                 <ul id="errors" class="text-error"></ul>
                 <div class="form-btn-container">
-                    <button class="btn btn-secondary">Annuler</button>
-                    <button class="btn btn-primary">Sauvegarder</button>
+                    <button type="button" class="btn btn-secondary">Annuler</button>
+                    <!-- mettre un type button dans une balise button d'un formulaire signifie qu'il ne va pas soumettre le form -->
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
                 </div>
             </form>
         </div>

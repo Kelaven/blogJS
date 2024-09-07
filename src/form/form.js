@@ -2,14 +2,25 @@ import "../assets/scripts/topbar.js";
 import "./form.scss";
 import "../assets/styles/styles.scss";
 
+
+
+// * Logique pour envoyer les données au serveur
+
+
 const form = document.querySelector("form");
 const errorElement = document.getElementById("errors");
+const buttonCancel = document.querySelector(".btn-secondary");
 let errors = [];
+
+buttonCancel.addEventListener("click", () => {
+    location.assign('/index.html');
+})
+
 
 form.addEventListener("submit", async event => {
     event.preventDefault();
 
-    // formdata pour récupérer tous les input et textarea plutôt que que tout sélectionner à la main : 
+    // FormData pour récupérer tous les input et textarea plutôt que tout sélectionner à la main : 
     const formData = new FormData(form);
     const entries = formData.entries(); // retourne un iterateur permettant d'accéder aux paires clefs/valeurs contenues dans cet objet
 
@@ -35,24 +46,21 @@ form.addEventListener("submit", async event => {
                     'Content-Type': "application/json"
                 }
             });
+            // Rediriger l'utilisateur :
+            if (response.status < 299) { // toutes les réponses entre 200 et 299 signifient qu'il n'y a pas d'erreur dans la promesse
+                location.assign('/index.html');
+            }
             const body = await response.json()
             console.log(body);
         } catch (error) {
             console.error('e : ', e);
         }
-
-
     }
-
-
-
-
-
 })
 
 
 const formIsValid = (article) => {
-    // Réinitialiser le tableau d'erreurs avant chaque validation
+    // Réinitialiser le tableau d'erreurs avant chaque validation pour éviter les doublons de msg d'erreur (en fait grâce à ça on va repartir d'un tableau vide à chaque click sur le bouton Sauvegarder)
     errors = [];
 
     if (!article.author || !article.category || !article.content || !article.img || !article.title) { // si jamais un des champs n'est pas défini, on rempli le tableau d'erreurs

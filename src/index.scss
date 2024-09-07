@@ -1,3 +1,5 @@
+@import "./assets/styles/media-queries";
+
 .content {
   display: flex;
   justify-content: center;
@@ -10,6 +12,9 @@
       box-shadow: var(--box-shadow);
       background: white;
       padding: 0 5rem;
+      @include sm {
+        padding: 0 2rem;
+      }
       margin-bottom: 5rem;
       border-radius: 0.3rem;
       display: flex;
