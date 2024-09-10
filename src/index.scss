@@ -3,12 +3,35 @@
 .content {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 5rem;
+  .sidebar {
+    flex: 0 0 250px;
+    padding: 0 2rem 2rem 2rem;
+    .categories {
+      padding: 2rem;
+      background: #fff;
+      border-radius: 0.3rem;
+      box-shadow: var(--box-shadow);
+      text-wrap: balance;
+      li {
+        margin: 1rem;
+        cursor: pointer;
+        transition: color 0.2s;
+        &:hover {
+          color: var(--primary);
+          b {
+            color: var(--primary);
+          }
+        }
+      }
+    }
+  }
 
   .articles-container {
     max-width: 800px;
-    width: 100%;
-    margin: 5rem 0 10rem 0;
+    flex: 1;
+    margin: 0 0 10rem 0;
 
     .article {
       box-shadow: var(--box-shadow);
