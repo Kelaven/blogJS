@@ -25,6 +25,13 @@
           }
         }
       }
+      .active {
+        color: var(--primary);
+        font-weight: 700;
+        b {
+          color: var(--primary);
+        }
+      }
     }
   }
 

@@ -4,10 +4,17 @@ import "./index.scss";
 
 const articleContainerElement = document.querySelector(".articles-container");
 const categoriesContainerElement = document.querySelector(".categories");
+let filter;
+let articles; // on manipule une variable appelée articles, qui contient la liste des articles récupérés depuis l'API (grâce à 'articles = await response.json();"'). Cette variable est initialisée globalement, en dehors des fonctions. Cela signifie que toutes les fonctions dans le script ont accès à cette variable, sans avoir besoin de la passer comme paramètre à chaque fois. Les fonctions comme createMenuCategories() peuvent donc l’utiliser directement sans avoir à la leur passer.
 
-
-const createArticles = (articles) => {
-    const articlesDOM = articles.map((article) => {
+const createArticles = () => {
+    const articlesDOM = articles.filter((article) => {
+        if (filter) { // s'il y a un filtre. Cette fonction est utilisée pour pouvoir filtrer les articles au click sur leur catégorie correspondante
+            return article.category === filter;
+        } else {
+            return true;
+        }
+    }).map((article) => {
         const articleDOM = document.createElement('div');
         articleDOM.classList.add("article");
         articleDOM.innerHTML = `
@@ -59,7 +66,7 @@ const createArticles = (articles) => {
 };
 
 
-const createMenuCategories = (articles) => { // reduce permet de parcourir un tableau (dans ce cas, un tableau d’articles) et de réduire ce tableau à une seule valeur, qui dans cet exemple est un objet où chaque clé est une catégorie et chaque valeur est le nombre d’articles dans cette catégorie.
+const createMenuCategories = () => { // reduce permet de parcourir un tableau (dans ce cas, un tableau d’articles) et de réduire ce tableau à une seule valeur, qui dans cet exemple est un objet où chaque clé est une catégorie et chaque valeur est le nombre d’articles dans cette catégorie.
     const categories = articles.reduce((acc, article) => { // à chaque itération on utilise article
         // on défini le nom de la clé avec [article.category] :
         if (acc[article.category]) { // si il y a une valeur autre que 0 à l'intérieur, on incrémente la valeur
@@ -76,7 +83,7 @@ const createMenuCategories = (articles) => { // reduce permet de parcourir un ta
     // Après on fait un map (on itère sur tous les éléments du tableau et on peut retourner une nouvelle valeur pour cette itération ) :
     const categoriesArr = Object.keys(categories).map((category) => { // on veut retourner un nouveau tableau mais avec 2 valeurs : les noms des catégories (comme on les a déjà dans categoriesArr) mais aussi le nombre d'articles de cette catégorie (que l'on a perdu quand on est passé de l'objet au tableau) :
         return [category, categories[category]]; // je reprends category qui fonctionnait déjà et j'y ajoute categories[category] où categories est l'objet créé précédement 
-    })
+    }).sort((c1, c2) => c1[0].localeCompare(c2[0]));
 
     displayMenuCategories(categoriesArr);
     console.log(categoriesArr);
@@ -86,7 +93,23 @@ const createMenuCategories = (articles) => { // reduce permet de parcourir un ta
 const displayMenuCategories = (categoriesArr) => {
     const liElements = categoriesArr.map(categoriesElem => {
         const li = document.createElement('li');
-        li.innerHTML = `<li>${categoriesElem[0]} ( <b>${categoriesElem[1]}</b> )</li>`;
+        li.addEventListener("click", () => { // filtrer au click
+            // ajouter une classe pour que l'élément reste en vert :
+            if (filter === categoriesElem[0]) {
+                filter = null;
+                li.classList.remove("active");
+                createArticles();
+            } else {
+                filter = categoriesElem[0];
+                liElements.forEach(liEl => {
+                    liEl.classList.remove("active");
+                })
+                li.classList.add("active");
+                createArticles();
+            }
+
+        })
+        li.innerHTML = `${categoriesElem[0]} ( <b>${categoriesElem[1]}</b> )`;
         return li;
     })
 
@@ -99,15 +122,15 @@ const displayMenuCategories = (categoriesArr) => {
 const fetchArticles = async () => {
     try {
         const response = await fetch("https://restapi.fr/api/articles");
-        let articles = await response.json();
+        articles = await response.json();
         // Restapi retourne un objet s'il n'y a qu'un seul article, nous devons donc le transformer en tableau :
         if (!Array.isArray(articles)) {
             articles = [articles];
         }
         // transformer le json en élément du DOM :
-        createArticles(articles);
+        createArticles();
         // créer le menu catégories : 
-        createMenuCategories(articles);
+        createMenuCategories();
     } catch (e) {
         console.log(('e : ', e));
     }
