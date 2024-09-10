@@ -3,14 +3,49 @@ import "./form.scss";
 import "../assets/styles/styles.scss";
 
 
-
 // * Logique pour envoyer les données au serveur
 
 
 const form = document.querySelector("form");
 const errorElement = document.getElementById("errors");
 const buttonCancel = document.querySelector(".btn-secondary");
+let articleID;
 let errors = [];
+
+// modifier l'article : 
+const fillForm = (article) => {
+    // récupérer une référence à chacun de nos input :
+    const author = document.querySelector('input[name="author"]');
+    const img = document.querySelector('input[name="img"]');
+    const category = document.querySelector('input[name="category"]');
+    const title = document.querySelector('input[name="title"]');
+    const content = document.querySelector('textarea');
+
+    // écraser leur valeur : 
+    author.value = article.author || '';
+    img.value = article.img || '';
+    category.value = article.category || '';
+    title.value = article.title || '';
+    content.value = article.content || '';
+}
+
+
+// récupérer l'url avec l'id (pour modifier l'article) :
+const initForm = async () => {
+    const params = new URL(location.href);
+    articleID = params.searchParams.get('id');
+
+    if (articleID) {
+        const response = await fetch(`https://restapi.fr/api/articles/${articleID}`);
+        if (response.status < 300) { // si tout s'est bien passé
+            // extraire le json :
+            const article = await response.json();
+            fillForm(article);
+            console.log(article);
+        }
+    }
+}
+initForm();
 
 buttonCancel.addEventListener("click", () => {
     location.assign('/index.html');
@@ -39,21 +74,33 @@ form.addEventListener("submit", async event => {
             const json = JSON.stringify(article); // stringify pour convertir un objet JS en json, parse pour l'inverse
 
             // Maintenant on est prêt à envoyer notre donnée au serveur:
-            const response = await fetch('https://restapi.fr/api/articles', {
-                method: "POST",
-                body: json, // les données
-                headers: { // format sur lequel on va envoyer l'information
-                    'Content-Type': "application/json"
-                }
-            });
+            let response;
+            if (articleID) { // si on est en train de modifier l'article
+                response = await fetch(`https://restapi.fr/api/articles/${articleID}`, {
+                    method: "PATCH", // pour modifier qlqs inputs seulement
+                    body: json, // les données
+                    headers: { // format sur lequel on va envoyer l'information
+                        'Content-Type': "application/json"
+                    }
+                });
+            } else { // si on est en création d'article
+                response = await fetch('https://restapi.fr/api/articles', {
+                    method: "POST",
+                    body: json, // les données
+                    headers: { // format sur lequel on va envoyer l'information
+                        'Content-Type': "application/json"
+                    }
+                });
+            }
+
             // Rediriger l'utilisateur :
-            if (response.status < 299) { // toutes les réponses entre 200 et 299 signifient qu'il n'y a pas d'erreur dans la promesse
+            if (response.status < 300) { // toutes les réponses entre 200 et 299 signifient qu'il n'y a pas d'erreur dans la promesse
                 location.assign('/index.html');
             }
             const body = await response.json()
             console.log(body);
         } catch (error) {
-            console.error('e : ', e);
+            console.error('e : ', error);
         }
     }
 })

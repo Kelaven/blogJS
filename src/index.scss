@@ -29,6 +29,8 @@
       h2 {
         margin-top: 2rem;
         margin-bottom: 0;
+        text-align: center;
+        text-wrap: balance;
       }
       .article-author {
         color: var(--hint);
@@ -37,6 +39,7 @@
       .article-content {
         max-width: 550px;
         white-space: pre-line;
+        text-align: justify;
       }
       .article-actions {
         width: 100%;
