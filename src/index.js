@@ -4,8 +4,17 @@ import "./index.scss";
 
 const articleContainerElement = document.querySelector(".articles-container");
 const categoriesContainerElement = document.querySelector(".categories");
+const selectElement = document.querySelector("select");
 let filter;
 let articles; // on manipule une variable appelée articles, qui contient la liste des articles récupérés depuis l'API (grâce à 'articles = await response.json();"'). Cette variable est initialisée globalement, en dehors des fonctions. Cela signifie que toutes les fonctions dans le script ont accès à cette variable, sans avoir besoin de la passer comme paramètre à chaque fois. Les fonctions comme createMenuCategories() peuvent donc l’utiliser directement sans avoir à la leur passer.
+let sortBy = 'desc';
+
+
+selectElement.addEventListener("change", (event) => { // pour le tri par dates
+    sortBy = selectElement.value;
+    fetchArticles();
+})
+
 
 const createArticles = () => {
     const articlesDOM = articles.filter((article) => {
@@ -83,7 +92,7 @@ const createMenuCategories = () => { // reduce permet de parcourir un tableau (d
     // Après on fait un map (on itère sur tous les éléments du tableau et on peut retourner une nouvelle valeur pour cette itération ) :
     const categoriesArr = Object.keys(categories).map((category) => { // on veut retourner un nouveau tableau mais avec 2 valeurs : les noms des catégories (comme on les a déjà dans categoriesArr) mais aussi le nombre d'articles de cette catégorie (que l'on a perdu quand on est passé de l'objet au tableau) :
         return [category, categories[category]]; // je reprends category qui fonctionnait déjà et j'y ajoute categories[category] où categories est l'objet créé précédement 
-    }).sort((c1, c2) => c1[0].localeCompare(c2[0]));
+    }).sort((c1, c2) => c1[0].localeCompare(c2[0])); // trier les catégories par ordre
 
     displayMenuCategories(categoriesArr);
     console.log(categoriesArr);
@@ -93,6 +102,10 @@ const createMenuCategories = () => { // reduce permet de parcourir un tableau (d
 const displayMenuCategories = (categoriesArr) => {
     const liElements = categoriesArr.map(categoriesElem => {
         const li = document.createElement('li');
+        li.innerHTML = `${categoriesElem[0]} ( <b>${categoriesElem[1]}</b> )`;
+        if (categoriesElem[0] === filter) { // pour garder la catégorie active quand on est dessus et qu'on trie
+            li.classList.add("active");
+        }
         li.addEventListener("click", () => { // filtrer au click
             // ajouter une classe pour que l'élément reste en vert :
             if (filter === categoriesElem[0]) {
@@ -109,7 +122,6 @@ const displayMenuCategories = (categoriesArr) => {
             }
 
         })
-        li.innerHTML = `${categoriesElem[0]} ( <b>${categoriesElem[1]}</b> )`;
         return li;
     })
 
@@ -121,7 +133,8 @@ const displayMenuCategories = (categoriesArr) => {
 // Récupérer la liste de nos articles : 
 const fetchArticles = async () => {
     try {
-        const response = await fetch("https://restapi.fr/api/articles");
+        // const response = await fetch("https://restapi.fr/api/articles");
+        const response = await fetch(`https://restapi.fr/api/articles?sort=createdAt:${sortBy}`); // pour trier par dates, la règle "GET api/posts?sort=createdAt:-1" étant donnée par l'API
         articles = await response.json();
         // Restapi retourne un objet s'il n'y a qu'un seul article, nous devons donc le transformer en tableau :
         if (!Array.isArray(articles)) {
